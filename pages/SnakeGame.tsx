@@ -245,5 +245,5 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
 });
-
+.3
 export default SnakeGame;
