@@ -16,10 +16,29 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { loginUser } from '../utils/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width } = Dimensions.get('window');
+export const loginUser = async (email: string, password: string) => {
+    try {
+        const response = await fetch('http://192.168.183.17:3000/api/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, password }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Invalid email or password');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error in loginUser:', error);
+        throw error;
+    }
+};
 
 type RootStackParamList = {
     Login: undefined;
@@ -86,7 +105,7 @@ const Login: React.FC = () => {
             ])
         ).start();
     };
-
+    
     const handleLogin = async () => {
         try {
             if (!email || !password) {
@@ -97,22 +116,31 @@ const Login: React.FC = () => {
             setLoading(true);
             setError('');
     
+            //console.log('Sending request to API...');
             const response = await loginUser(email, password);
+            //console.log('API Response:', response);
+    
+            if (!response || !response.token) {
+                setError('Invalid email or password');
+                setLoading(false);
+                return;
+            }
+    
             await AsyncStorage.setItem('userToken', response.token);
             
-            // Reset form
             setEmail('');
             setPassword('');
             setError('');
             
-            // Navigate to Home
             navigation.replace('Home');
         } catch (error: any) {
-            setError(error.toString());
+            console.error('Login Error:', error);
+            setError('Login failed. Please try again.');
         } finally {
             setLoading(false);
         }
     };
+    
 
     const renderParticles = () => {
         return [...Array(8)].map((_, i) => {
@@ -371,11 +399,7 @@ signupLink: {
         color: '#7F5AF0',
         fontSize: 14,
     },
-    errorText: {
-        color: 'red',
-        textAlign: 'center',
-        marginTop: 10,
-    },
+    
     errorText: {
         color: '#EF4444',
         fontSize: 14,

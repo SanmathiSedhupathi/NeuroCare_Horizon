@@ -84,7 +84,7 @@ const App: React.FC = () => {
                         name="Home" 
                         component={Home}
                         options={({ navigation }) => ({
-                            title: 'Welcome',
+                            title: 'Neurocare',
                             headerLeft: () => (
                                 <TouchableOpacity 
                                     onPress={() => navigation.toggleDrawer()}
@@ -259,7 +259,7 @@ const App: React.FC = () => {
                         name="Profile" 
                         component={Profile}
                         options={({ navigation }) => ({
-                            title: 'Doctors',
+                            title: 'Profile',
                             headerLeft: () => (
                                 <TouchableOpacity 
                                     onPress={() => navigation.goBack()}
@@ -275,7 +275,7 @@ const App: React.FC = () => {
                         name="History" 
                         component={History}
                         options={({ navigation }) => ({
-                            title: 'Doctors',
+                            title: 'History',
                             headerLeft: () => (
                                 <TouchableOpacity 
                                     onPress={() => navigation.goBack()}
@@ -304,12 +304,21 @@ const App: React.FC = () => {
                         }}
                     />
 
-                    <Stack.Screen 
+<Stack.Screen 
                         name="SnakeGame" 
                         component={SnakeGame}
-                        options={{
-                            headerShown: false,
-                        }}
+                        options={({ navigation }) => ({
+                            title: 'Snake Game',
+                            headerLeft: () => (
+                                <TouchableOpacity 
+                                    onPress={() => navigation.goBack()}
+                                    style={styles.headerButton}
+                                    activeOpacity={0.7}
+                                >
+                                    <Ionicons name="arrow-back" size={22} color="#7F5AF0" />
+                                </TouchableOpacity>
+                            ),
+                        })}
                     />
                 </Stack.Navigator>
             </NavigationContainer>

@@ -16,12 +16,14 @@ const SnakeGame: React.FC = () => {
     const [direction, setDirection] = useState<string>('RIGHT');
     const [food, setFood] = useState<{ x: number; y: number }>({ x: 5, y: 5 });
     const [gameOver, setGameOver] = useState<boolean>(false);
+    const [score, setScore] = useState<number>(0);
 
     useEffect(() => {
         const gameInterval = setInterval(() => {
             const newSnake = [...snake];
             const head = { ...newSnake[0] };
 
+            // Update the snake's head position based on the direction
             if (direction === 'UP') head.y -= 1;
             if (direction === 'DOWN') head.y += 1;
             if (direction === 'LEFT') head.x -= 1;
@@ -29,15 +31,18 @@ const SnakeGame: React.FC = () => {
 
             newSnake.unshift(head);
 
+            // Check if the snake eats the food
             if (head.x === food.x && head.y === food.y) {
                 setFood({
                     x: Math.floor(Math.random() * gridSize),
                     y: Math.floor(Math.random() * gridSize),
                 });
+                setScore(score + 1); // Increment the score
             } else {
                 newSnake.pop();
             }
 
+            // Check for collisions with walls or itself
             if (
                 head.x < 0 ||
                 head.y < 0 ||
@@ -53,7 +58,7 @@ const SnakeGame: React.FC = () => {
         }, 200);
 
         return () => clearInterval(gameInterval);
-    }, [snake, direction, food, gameOver]);
+    }, [snake, direction, food, gameOver, score]);
 
     const handleDirection = (newDirection: string) => {
         if (
@@ -64,6 +69,18 @@ const SnakeGame: React.FC = () => {
         ) {
             setDirection(newDirection);
         }
+    };
+
+    const resetGame = () => {
+        setSnake([
+            { x: 2, y: 2 },
+            { x: 1, y: 2 },
+            { x: 0, y: 2 },
+        ]);
+        setDirection('RIGHT');
+        setFood({ x: 5, y: 5 });
+        setGameOver(false);
+        setScore(0);
     };
 
     const renderGrid = () => {
@@ -96,44 +113,52 @@ const SnakeGame: React.FC = () => {
         <LinearGradient colors={['#171923', '#0D1117']} style={styles.container}>
             <Text style={styles.title}>Snake Game</Text>
             <Text style={styles.score}>
-                {gameOver ? 'Game Over!' : `Score: ${snake.length - 3}`}
+                {gameOver ? `Game Over! Final Score: ${score}` : `Score: ${score}`}
             </Text>
-            
+
             <View style={styles.gridContainer}>
                 {renderGrid()}
             </View>
 
-            <View style={styles.controls}>
-                <TouchableOpacity 
-                    style={styles.controlButton} 
-                    onPress={() => handleDirection('UP')}
-                >
-                    <MaterialCommunityIcons name="arrow-up" size={30} color="#E2E8F0" />
-                </TouchableOpacity>
-                
-                <View style={styles.horizontalControls}>
+            {!gameOver && (
+                <View style={styles.controls}>
                     <TouchableOpacity 
                         style={styles.controlButton} 
-                        onPress={() => handleDirection('LEFT')}
+                        onPress={() => handleDirection('UP')}
                     >
-                        <MaterialCommunityIcons name="arrow-left" size={30} color="#E2E8F0" />
+                        <MaterialCommunityIcons name="arrow-up" size={30} color="#E2E8F0" />
                     </TouchableOpacity>
+                    
+                    <View style={styles.horizontalControls}>
+                        <TouchableOpacity 
+                            style={styles.controlButton} 
+                            onPress={() => handleDirection('LEFT')}
+                        >
+                            <MaterialCommunityIcons name="arrow-left" size={30} color="#E2E8F0" />
+                        </TouchableOpacity>
+                        
+                        <TouchableOpacity 
+                            style={styles.controlButton} 
+                            onPress={() => handleDirection('RIGHT')}
+                        >
+                            <MaterialCommunityIcons name="arrow-right" size={30} color="#E2E8F0" />
+                        </TouchableOpacity>
+                    </View>
                     
                     <TouchableOpacity 
                         style={styles.controlButton} 
-                        onPress={() => handleDirection('RIGHT')}
+                        onPress={() => handleDirection('DOWN')}
                     >
-                        <MaterialCommunityIcons name="arrow-right" size={30} color="#E2E8F0" />
+                        <MaterialCommunityIcons name="arrow-down" size={30} color="#E2E8F0" />
                     </TouchableOpacity>
                 </View>
-                
-                <TouchableOpacity 
-                    style={styles.controlButton} 
-                    onPress={() => handleDirection('DOWN')}
-                >
-                    <MaterialCommunityIcons name="arrow-down" size={30} color="#E2E8F0" />
+            )}
+
+            {gameOver && (
+                <TouchableOpacity style={styles.retryButton} onPress={resetGame}>
+                    <Text style={styles.retryButtonText}>Retry</Text>
                 </TouchableOpacity>
-            </View>
+            )}
         </LinearGradient>
     );
 };
@@ -204,6 +229,20 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
+    },
+    retryButton: {
+        backgroundColor: '#7F5AF0',
+        padding: 15,
+        borderRadius: 12,
+        marginTop: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+        elevation: 5,
+    },
+    retryButtonText: {
+        color: '#FFFFFF',
+        fontSize: 18,
+        fontWeight: 'bold',
     },
 });
 

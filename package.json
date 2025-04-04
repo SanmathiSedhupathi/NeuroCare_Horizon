@@ -20,6 +20,7 @@
     "axios": "^1.8.2",
     "bcryptjs": "^3.0.2",
     "cohere-ai": "^7.16.0",
+    "cors": "^2.8.5",
     "crypto-browserify": "^3.12.1",
     "expo": "^52.0.42",
     "expo-camera": "~16.0.18",

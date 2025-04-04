@@ -309,7 +309,7 @@ const Habit: React.FC = () => {
                 style={styles.container}
             >
                 <ScrollView style={styles.content}>
-                    <Text style={styles.title}>Daily Habits</Text>
+                    
                     <TouchableOpacity 
                         onPress={() => setModalVisible(true)}
                         style={styles.personalizeButton}

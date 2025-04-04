@@ -14,7 +14,16 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { registerUser } from '../utils/api';
+import axios from 'axios';
+
+export const registerUser = async (username: string, email: string, password: string) => {
+    const response = await axios.post('http://192.168.183.17:3000/api/register', {
+        username,
+        email,
+        password
+    });
+    return response.data;
+};
 
 type RootStackParamList = {
     Login: undefined;
@@ -52,14 +61,12 @@ const Register: React.FC = () => {
                 return;
             }
 
-            // Email validation
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
                 setError('Please enter a valid email');
                 return;
             }
 
-            // Password validation
             if (password.length < 6) {
                 setError('Password must be at least 6 characters');
                 return;
@@ -71,7 +78,8 @@ const Register: React.FC = () => {
             await registerUser(username, email, password);
             navigation.replace('Login');
         } catch (error: any) {
-            setError(error.toString());
+            console.error('Registration error:', error); // Log the error for debugging
+            setError('Failed to register. Please try again.');
         } finally {
             setLoading(false);
         }
