@@ -1,8 +1,7 @@
 # 🧠 NeuroCare  – AI-Powered Mental Wellness Companion
 
 **NeuroCare** is a React Native mobile app designed to support mental health through personalized AI support, real-time mood detection, and holistic wellness tools. It goes beyond typical chatbots to promote emotional self-awareness, real-world connection, and emergency readiness — all while maintaining user privacy and compassion.
-
-> 💬 Supports **multiple languages**, 🎥 uses **live facial emotion detection**, 📍 finds **nearby psychiatric help**, and 📓 promotes journaling, hobbies, and healthy habits.
+💬 Supports **multiple languages**, 🎥 uses **live facial emotion detection**, 📍 finds **nearby psychiatric help**, and 📓 promotes journaling, hobbies, and healthy habits.
 
 ---
 
